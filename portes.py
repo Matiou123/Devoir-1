@@ -39,7 +39,9 @@ def porteR(angle_deg):
     angle_deg += 45
     angle_rad = np.radians(angle_deg)
     return (np.cos(angle_rad), np.sin(angle_rad))
-
+def porteF(angle_deg, angle_porte):
+    angle_rad = np.radians(angle_deg - angle_porte)
+    return (np.cos(angle_rad), np.sin(angle_rad))
 # --- Préparation du graphe ---
 fig, ax = plt.subplots()
 
@@ -64,23 +66,23 @@ vecteur2 = ax.quiver(0, 0, 1, 0, angles='xy', scale_units='xy', scale=1, color='
 # Création de "handles" factices pour la légende
 legend_elements = [
     Line2D([0], [0], color='red', lw=2, label='Vecteur unité'),
-    Line2D([0], [0], color='magenta', lw=2, label='Vecteur porteR')
+    Line2D([0], [0], color='magenta', lw=2, label='Vecteur porteF angle -180')
 ]
 ax.legend(handles=legend_elements, loc="upper right")
 
 # --- Fonction de mise à jour ---
 def update(angle_deg):
     x, y = vecteur_unitaire(angle_deg)
-    x1, y1 = porteR(angle_deg)
+    x1, y1 = porteF(angle_deg, -180)
 
     # Mise à jour des vecteurs
     vecteur1.set_UVC(x, y)
     vecteur2.set_UVC(x1, y1)
 
-    ax.set_title(f"Porte R avec angle {angle_deg}°")
+    ax.set_title(f"Porte F_-180 avec angle {angle_deg}°")
     return vecteur1, vecteur2
 
 # --- Animation ---
 ani = FuncAnimation(fig, update, frames=range(0, 361), interval=20, blit=True, repeat=True)
-ani.save("cercle_trigo_R.gif", writer="pillow", fps=30)
+ani.save("cercle_trigo_F_-180.gif", writer="pillow", fps=30)
 plt.show()
