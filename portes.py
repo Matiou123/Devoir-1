@@ -65,7 +65,8 @@ def probaEnBaseQuantique(probabilité):
     ket1 = np.sin(angle_rad)
     return ket0, ket1
 
-def plot_porte_animée(Porte,angle_deg):
+
+def plot_porte(Porte, angle_deg,sauv=False):
     # --- Préparation du graphe ---
     fig, ax = plt.subplots()
 
@@ -82,59 +83,15 @@ def plot_porte_animée(Porte,angle_deg):
     ax.set_xlim(-1.2, 1.2)
     ax.set_ylim(-1.2, 1.2)
 
-    # Deux vecteurs initialisés
+    # Vecteur quantiques
     vecteur1 = ax.quiver(0, 0, 1, 0, angles='xy', scale_units='xy', scale=1, color='red')
+    vecteur1_ = ax.quiver(0, 0, -1, 0, angles='xy', scale_units='xy', scale=1, color='red')
     vecteur2 = ax.quiver(0, 0, 1, 0, angles='xy', scale_units='xy', scale=1, color='magenta')
-    vecteur2ket1 = ax.quiver(0, 0, 0, 1, angles='xy', scale_units='xy', scale=1, color='orange')  
-    vecteur2Ket0 = ax.quiver(0, 0, 1, 0, angles='xy', scale_units='xy', scale=1, color='green')
-    # --- Légende ---
-    # Création de "handles" factices pour la légende
-    legend_elements = [
-        Line2D([0], [0], color='red', lw=2, label='Vecteur unité'),
-        Line2D([0], [0], color='magenta', lw=2, label='Vecteur porteW')
-    ]
-    ax.legend(handles=legend_elements, loc="upper right")
-
-    # --- Fonction de mise à jour ---
-    def update(angle_deg):
-        x, y = vecteur_unitaire(angle_deg)
-        x1, y1 = Porte(angle_deg)
-
-        # Mise à jour des vecteurs
-        vecteur1.set_UVC(x, y)
-        vecteur2.set_UVC(x1, y1)
-
-        ax.set_title(f"Porte W+ avec angle {angle_deg}°")
-        return vecteur1, vecteur2
-
-    # --- Animation ---
-    ani = FuncAnimation(fig, update, frames=range(0, 361), interval=20, blit=True, repeat=True)
-    ani.save("PorteWplus.gif", writer="pillow", fps=30)
-    plt.show()
-
-
-def plot_porte(Porte, angle_deg):
-    # --- Préparation du graphe ---
-    fig, ax = plt.subplots()
-
-    # Cercle unité
-    theta = np.linspace(0, 2*np.pi, 500)
-    ax.plot(np.cos(theta), np.sin(theta), 'b')
-
-    # Axes
-    ax.axhline(0, color='black', linewidth=0.8)
-    ax.axvline(0, color='black', linewidth=0.8)
-
-    # Limites
-    ax.set_aspect('equal')
-    ax.set_xlim(-1.2, 1.2)
-    ax.set_ylim(-1.2, 1.2)
-
-    # Deux vecteurs initialisés
-    vecteur1 = ax.quiver(0, 0, 1, 0, angles='xy', scale_units='xy', scale=1, color='red')
-    vecteur2 = ax.quiver(0, 0, 1, 0, angles='xy', scale_units='xy', scale=1, color='magenta')
-    vecteur2ket1 = ax.quiver(0, 0, 0, 10, angles='xy', scale_units='xy', scale=10, color='orange')  
+    vecteur2_ = ax.quiver(0, 0, -1, 0, angles='xy', scale_units='xy', scale=1, color='magenta')
+    vecteur2ket1 = ax.quiver(0, 0, 0, 10, angles='xy', scale_units='xy', scale=10, color='orange') 
+    vecteur2ket1_ = ax.quiver(0, 0, 0, -10, angles='xy', scale_units='xy', scale=10, color='orange')  
     vecteur2Ket0 = ax.quiver(0, 0, 10, 0, angles='xy', scale_units='xy', scale=10, color='green')
+    vecteur2Ket0_ = ax.quiver(0, 0, -10, 0, angles='xy', scale_units='xy', scale=10, color='green')
 
 
     # --- Légende ---
@@ -151,14 +108,16 @@ def plot_porte(Porte, angle_deg):
 
     # Mise à jour des vecteurs
     vecteur1.set_UVC(x, y)
+    vecteur1_.set_UVC(-x, -y)
     vecteur2.set_UVC(x1, y1)
+    vecteur2_.set_UVC(-x1, -y1)
 
-    ax.set_title(f"Porte W avec angle {angle_deg}°")
-
+    ax.set_title(f"Porte avec angle {angle_deg}°")
+    if (sauv==True):
+        plt.savefig(f"Porte W-{angle_deg}")
     plt.show()
+    
 
-""" ket0 , ket1 = probaEnBaseQuantique(0.999)
-print(ket0**2,ket1**2) """
 
 def plot_proba_to_vecteur():
     # --- Préparation du graphe ---
@@ -178,8 +137,11 @@ def plot_proba_to_vecteur():
     ax.set_ylim(-1.2, 1.2)
 
     vecteur1 = ax.quiver(0, 0, 1, 0, angles='xy', scale_units='xy', scale=1, color='magenta')
-    vecteur2ket1 = ax.quiver(0, 0, 0, 1, angles='xy', scale_units='xy', scale=1, color='orange')  
+    vecteur1_ = ax.quiver(0, 0, -1, 0, angles='xy', scale_units='xy', scale=1, color='magenta')
+    vecteur2ket1 = ax.quiver(0, 0, 0, 1, angles='xy', scale_units='xy', scale=1, color='orange')
+    vecteur2ket1_ = ax.quiver(0, 0, 0, -1, angles='xy', scale_units='xy', scale=1, color='orange')    
     vecteur2Ket0 = ax.quiver(0, 0, 1, 0, angles='xy', scale_units='xy', scale=1, color='green')
+    vecteur2Ket0_ = ax.quiver(0, 0, -1, 0, angles='xy', scale_units='xy', scale=1, color='green')
     # --- Légende ---
     # Création de "handles" factices pour la légende
     legend_elements = [
@@ -191,9 +153,12 @@ def plot_proba_to_vecteur():
     def update(proba):
         
         x1, y1 = probaEnBaseQuantique(proba)
-
+        x0, y0 = np.sqrt(proba) , -np.sqrt(1-proba)
+        
         # Mise à jour des vecteurs
         vecteur1.set_UVC(x1, y1)
+        vecteur1_.set_UVC(x0, y0)
+        
 
         ax.set_title(f"Vecteur probabilité avec p = {proba:.2f}")
         return [vecteur1]
@@ -204,4 +169,63 @@ def plot_proba_to_vecteur():
     ani.save("Proba_to_vecteur.gif", writer="pillow", fps=30)
     plt.show()
     
-plot_proba_to_vecteur()
+
+def plot_porte_animée(Porte,angle_deg,sauv = False):
+    # --- Préparation du graphe ---
+    fig, ax = plt.subplots()
+
+    # Cercle unité
+    theta = np.linspace(0, 2*np.pi, 500)
+    ax.plot(np.cos(theta), np.sin(theta), 'b')
+
+    # Axes
+    ax.axhline(0, color='black', linewidth=0.8)
+    ax.axvline(0, color='black', linewidth=0.8)
+
+    # Limites
+    ax.set_aspect('equal')
+    ax.set_xlim(-1.2, 1.2)
+    ax.set_ylim(-1.2, 1.2)
+
+    # Vecteur quantiques
+    vecteur1 = ax.quiver(0, 0, 1, 0, angles='xy', scale_units='xy', scale=1, color='red')
+    vecteur1_ = ax.quiver(0, 0, -1, 0, angles='xy', scale_units='xy', scale=1, color='red')
+    vecteur2 = ax.quiver(0, 0, 1, 0, angles='xy', scale_units='xy', scale=1, color='magenta')
+    vecteur2_ = ax.quiver(0, 0, -1, 0, angles='xy', scale_units='xy', scale=1, color='magenta')
+    vecteur2ket1 = ax.quiver(0, 0, 0, 10, angles='xy', scale_units='xy', scale=10, color='orange') 
+    vecteur2ket1_ = ax.quiver(0, 0, 0, -10, angles='xy', scale_units='xy', scale=10, color='orange')  
+    vecteur2Ket0 = ax.quiver(0, 0, 10, 0, angles='xy', scale_units='xy', scale=10, color='green')
+    vecteur2Ket0_ = ax.quiver(0, 0, -10, 0, angles='xy', scale_units='xy', scale=10, color='green')
+    
+    # --- Légende ---
+    # Création de "handles" factices pour la légende
+    legend_elements = [
+        Line2D([0], [0], color='red', lw=2, label='Vecteur unité'),
+        Line2D([0], [0], color='magenta', lw=2, label='Vecteur porteW')
+    ]
+    ax.legend(handles=legend_elements, loc="upper right")
+
+    # --- Fonction de mise à jour ---
+    def update(angle_deg):
+        x, y = vecteur_unitaire(angle_deg)
+        x1, y1 = Porte(angle_deg)
+
+        # Mise à jour des vecteurs
+        vecteur1.set_UVC(x, y)
+        vecteur1_.set_UVC(-x, -y)
+        vecteur2.set_UVC(x1, y1)
+        vecteur2_.set_UVC(-x1, -y1)
+
+        ax.set_title(f"Porte W+ avec angle {angle_deg}°")
+        return vecteur1, vecteur2, vecteur1_,vecteur2_
+
+    # --- Animation ---
+    ani = FuncAnimation(fig, update, frames=range(0, 361), interval=20, blit=True, repeat=True)
+    if(sauv == True):
+        ani.save("PorteWmoins.gif", writer="pillow", fps=30)
+    plt.show()
+    
+plot_porte(porteWmoins,45,sauv=True)
+plot_porte(porteWmoins,135,sauv=True)
+plot_porte(porteWmoins,225,sauv=True)
+plot_porte(porteWmoins,315,sauv=True)
